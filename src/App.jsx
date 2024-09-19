@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import './App.css'
+
 import Home from './pages/Home'
 import Service from './pages/Service'
 import About from './pages/About'
@@ -12,6 +12,9 @@ import AllDoctors from './pages/AllDoctors'
 import AppointmentForm from './components/form/AppoinmentForm'
 import DoctorDetail from './pages/DoctorDetail'
 import Profile from './components/Profile'
+import Login from './components/Login'
+import SignUp from './components/SignUp'
+
 import MyAppointments from './components/MyAppointments'
 function App() {
   
@@ -31,7 +34,8 @@ function App() {
            <Route path='/doctor-detail' element={<DoctorDetail/>}/>
            <Route path='/profile' element={<Profile/>}/>
           <Route path='/my-appointments' element={<MyAppointments/>}/>
-
+          <Route path='/login' element={<Login/>}/>
+          <Route path='/Signup' element={<SignUp/>}/>
         </Routes>
       </main>
       <Footer />

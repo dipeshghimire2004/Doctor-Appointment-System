@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 // import {Button, Input, Select} from '../index';
-import Button from '../index';
+import Button from '../Button';
 import { useNavigate } from 'react-router-dom';
 
 const AppointmentForm = () => {

@@ -14,7 +14,7 @@ const DoctorDetail = () => {
   return (
     <div>
         <DoctorCard>
-            
+            Hello
         </DoctorCard>
     </div>
   )

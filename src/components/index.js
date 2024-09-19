@@ -1,13 +1,30 @@
-import Button from "./Button";
-import Footer from "./Footer";
-import Select from "./Select";
-import Input from "./Input";
 
+import Header from "./Header/Header"
+import Footer from "./Footer"
+import Select from "./Select"
+import Input from "./Input"
+import SIgnUp from './SignUp'
+import Login from "./Login"
+import Logout from './Header/Logout'
 
-export default{
+import DoctorCard from './DoctorCard'
+import HeroSection from './HeroSection'
+import ServicesSection from './ServicesSection'
+import Button from "./Button"
+
+export {
     Button,
     Footer,
     Input,
-    Select
+    Select,
+    SIgnUp,
+    Login,
+    Header,
+    DoctorCard,
+
+    HeroSection,
+    ServicesSection,
+    Logout,
+
 
 }

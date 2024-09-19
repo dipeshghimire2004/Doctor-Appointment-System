@@ -3,12 +3,13 @@ import { NavLink } from 'react-router-dom';
 import Logout from './Logout';
 import { useNavigate } from 'react-router-dom';
 import Profile from '../../assets/images/Profile.png'
-import Button from '../index';
-import Login from '../Login';
+import Button from '../Button';
+// import Login from '../Login';
+// import SignUp from '../SignUp'
 
 
 const Header = () => {
-  const [token, setToken]=useState(true);
+  const [token, setToken]=useState(false);
 
    const navigate=useNavigate()
   // const handleAppointment=()=>{
@@ -24,6 +25,12 @@ const Header = () => {
           className={({ isActive }) => `text-gray-600 hover:text-black ${isActive ? 'font-bold' : ''}`}
         >
           Home
+        </NavLink>
+        <NavLink 
+        to="/all-doctors"
+        className={({isActive})=>`text-gray-600 hover:text-black ${isActive ? 'font-bold' : ''}`}
+        >
+          All Doctors
         </NavLink>
         <NavLink 
           to="/service" 
@@ -43,12 +50,7 @@ const Header = () => {
         >
           Contact Us
         </NavLink>
-        <NavLink 
-        to="/all-doctors"
-        className={({isActive})=>`text-gray-600 hover:text-black ${isActive ? 'font-bold' : ''}`}
-        >
-          All Doctors
-        </NavLink>
+        
         {/* <NavLink 
         to='/appointment'
         className={({isActive})=>`text-gray-600 hover:text-black ${isActive? 'font-bold':''} `}>
@@ -56,10 +58,10 @@ const Header = () => {
         </NavLink> */}
       </nav>
       {token ? (
-  <div className='min-w-8 group relative'>
-    <img className='w-8' src={Profile} alt='profile' />
+  <div className='mr-20 min-w-10 group relative'>
+    <img className='w-10' src={Profile} alt='profile' />
 
-    <div className='absolute text-sm hidden group-hover:block bg-white border rounded shadow-lg'>
+    <div className='absolute text-sm hidden group-hover:block bg-white border rounded shadow-lg right-0 mt-2'>
       <div
         onClick={() => navigate('./profile')}
         className='bg-gray-300 p-2 hover:text-red-500 cursor-pointer'
@@ -78,9 +80,14 @@ const Header = () => {
     </div>
   </div>
 ) : (
-  <Button onClick={() => navigate('/login')}>
-    <Login />
+  <div>
+    <Button onClick={() => navigate('/login')}>
+      Login
+    </Button>
+    <Button onClick={() => navigate('/signup')}>
+    SignUp
   </Button>
+  </div>
 )}
 
       

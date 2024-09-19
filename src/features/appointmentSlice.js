@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { nanoid } from "@reduxjs/toolkit";
 
 const initialState={
-    status:false,
+    
     appointment:'',
     id:'',
 }
@@ -13,7 +13,7 @@ const appointmentSlice=createSlice({
     reducers:{
         addAppointment:(state,action)=>{
             const newAppointment={
-                status:true,
+               
                 id:nanoid(),
                 appointment:action.payload.appointment,
         };
@@ -22,6 +22,7 @@ const appointmentSlice=createSlice({
         cancelAppointment:(state)=>{
             state.appointment=state.appointment.filter((todo)=>todo.id!==id)           
         },
+    }
 })
 
 export const {addAppointment, cancelAppointment}=appointmentSlice.actions
