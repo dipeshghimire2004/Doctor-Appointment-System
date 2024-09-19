@@ -6,6 +6,7 @@ import Button from './Button';
 import Input from './Input';
 import {useDispatch} from "react-redux"
 import { login } from '../features/authSlice';
+import { Toaster,toast } from 'react-hot-toast';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -30,10 +31,11 @@ const Register = () => {
 
 
             if (response.status === 200) {
-                dispatch(login(response))
-                alert("Registration successful! You can now log in.");
+                dispatch(login(response.data))
+                
                 reset();  // Reset form after successful submission
                 navigate('/login', { replace: true });
+                toast.success('Registration successful! You can now log in.');
             } else {
                 alert(response.data.message || "Registration failed. Please try again.");
             }
@@ -46,6 +48,7 @@ const Register = () => {
    
     return (
         <div className="min-h-screen flex items-center justify-center">
+            <Toaster/>
             <div className="bg-white p-8 m-5 rounded-lg shadow-lg w-full max-w-md">
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Create Your Account</h2>
 
