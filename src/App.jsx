@@ -10,12 +10,14 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // import Appointments from './pages/Appointments'
 import AllDoctors from './pages/AllDoctors'
 import AppointmentForm from './components/form/AppoinmentForm'
-import DoctorDetail from './pages/DoctorDetail'
-import Profile from './components/Profile'
+import BookDoctorAppointment from './pages/BookDoctorAppointment'
+// import Profile from './components/Profile'
+import UserProfile from './pages/UserProfile'
 import Login from './components/Login'
 import SignUp from './components/SignUp'
 
 import MyAppointments from './components/MyAppointments'
+import DoctorAppointment from './pages/BookDoctorAppointment'
 function App() {
   
 
@@ -29,13 +31,16 @@ function App() {
           <Route path="/service" element={<Service />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/all-doctors" element={<AllDoctors/>}/>
-          <Route path='/appointment-form-section' element={<AppointmentForm/>}/>
-          {/* <Route path='/appointment' element={<Appointments/>}/> */}
-           <Route path='/doctor-detail' element={<DoctorDetail/>}/>
-           <Route path='/profile' element={<Profile/>}/>
-          <Route path='/my-appointments' element={<MyAppointments/>}/>
+          
           <Route path='/login' element={<Login/>}/>
           <Route path='/Signup' element={<SignUp/>}/>
+          
+          <Route path='/appointment-form-section' element={<AppointmentForm/>}/>
+           <Route path='/book-doctor-appointment' element={<BookDoctorAppointment/>}/>
+           <Route path='/user-profile' element={<UserProfile/>}/>
+          <Route path='/my-appointments' element={<MyAppointments/>}/>
+
+                    {/* <Route path='/appointment' element={<Appointments/>}/> */}
         </Routes>
       </main>
       <Footer />

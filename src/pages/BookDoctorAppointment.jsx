@@ -1,26 +1,34 @@
 import React from 'react';
 // import DoctorCard from '../components/DoctorCard';
 import { useForm } from 'react-hook-form';
-import { Header, Select } from '../components';
+import {Select } from '../components';
 import axios from 'axios';
 import toast,{Toaster} from 'react-hot-toast';
 import { addAppointment } from '../features/appointmentSlice';
 import { useDispatch } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-const DoctorDetail = () => {
+const BookDoctorAppointment = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const now = new Date().toISOString().substring(0, 16);
+  const navigate=useNavigate();
+  const dispatch=useDispatch();//should be outside of the onSubmit function to avoid re-creating
+  const location=useLocation();
 
- const onSubmit=async(data)=>{
+  const {selectedDoctor}=location.state || {};    //Get the doctor data passed from the previous page
+
+  const onSubmit=async(data)=>{
   const { time, date}=data;
 
-  const dispatch=useDispatch();
   // Assuming the user selects date as a day string and time as start time
   const startTime=time;
-  const endTime = new Date(new Date(`1970-01-01T${time}:00`).setMinutes(new Date(`1970-01-01T${time}:00`).getMinutes() + 30)).toTimeString().substring(0, 5); // 30 mins after startTime
+  const endTime = new Date(new Date(`1970-01-01T${time}:00`).setMinutes(new Date(`1970-01-01T${time}:00`).getMinutes() + 30))
+  .toTimeString()
+  .substring(0, 5); // 30 mins after startTime
 
 // const endTime=new Date(new Date())
 const requestData={
+  doctorId:selectedDoctor._id,      //pass selected doctor's ID
   day:new Date(date).toLocaleDateString('en-GB', {weekday:'long'}),
   startTime,
   endTime
@@ -30,14 +38,24 @@ const requestData={
   try {
     // const response=await axios.post(`http://localhost:8080/api/appointment/:doctorId/:userId",{data},{
      
-    const response=await axios.post(`http://localhost:8080/api/appointment/:doctorId/availability`,requestData,{
+    const response=await axios.post(`http://localhost:8080/api/appointment/${selectedDoctor._id}/availability`,
+      requestData,{
       headers:{
         'content-Type':'application/json',
       },
       
     });
-    dispatch.addAppointment(response.data);
+
+    dispatch(addAppointment({
+      doctorName:selectedDoctor.userId.name,
+      specialization:selectedDoctor.specialization,
+      date,
+      startTime,
+      endTime,
+    }));
+
     toast.success('Form subitted successfully!')
+    navigate('/all-doctors'); 
   } catch (error) {
     toast.error('Error booking appointment. Please try again.');
     console.error('Error booking appointment:', error);
@@ -47,7 +65,7 @@ const requestData={
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-lg rounded-lg">
       <Toaster/>
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Book an Appointment</h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">Book an Appointment with {selectedDoctor?.name}</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
@@ -63,6 +81,7 @@ const requestData={
         <div>
           <Select 
             label="Time"
+            type="time"  
             defaultValue={now}
             {...register('time', { required: 'Time is required' })}
             className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -83,4 +102,4 @@ const requestData={
 };
 
 
-export default DoctorDetail
+export default BookDoctorAppointment

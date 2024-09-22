@@ -9,7 +9,7 @@ import Button from '../Button';
 
 
 const Header = () => {
-  const [token, setToken]=useState(false);
+  const [token, setToken]=useState(true);
 
    const navigate=useNavigate()
   // const handleAppointment=()=>{
@@ -61,15 +61,15 @@ const Header = () => {
   <div className='mr-20 min-w-10 group relative'>
     <img className='w-10' src={Profile} alt='profile' />
 
-    <div className='absolute text-sm hidden group-hover:block bg-white border rounded shadow-lg right-0 mt-2'>
+    <div className='absolute text-sm hidden group-hover:block bg-white border rounded shadow-lg right-0 '>
       <div
-        onClick={() => navigate('./profile')}
+        onClick={() => navigate('./user-profile')}
         className='bg-gray-300 p-2 hover:text-red-500 cursor-pointer'
       >
         My Profile
       </div>
       <div
-        onClick={() => navigate('./appointments')}
+        onClick={() => navigate('./my-appointments')}
         className='bg-gray-300 p-2 hover:text-red-500 cursor-pointer'
       >
         My Appointments

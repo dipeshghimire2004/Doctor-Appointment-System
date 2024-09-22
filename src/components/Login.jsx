@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { login } from '../features/authSlice';
 import toast, { Toaster } from 'react-hot-toast';
 
+
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
@@ -36,6 +37,8 @@ const Login = () => {
 
         // Dispatch login action with relevant user data
         dispatch(login({ userData: user }));
+        
+        localStorage.setItem('user',JSON.stringify(userData));
 
         // Navigate to the appropriate dashboard based on user role
         switch (user.role) {
@@ -105,6 +108,7 @@ const Login = () => {
 
           <Button
             type='submit'
+            onLogin={()=>navigate('/', {state:{selectedDoctor : doctor}})}
             className='w-full hover:bg-blue-500 text-white font-bold py-3 px-4 mt-4 rounded-lg transition duration-300'
           >
             Login

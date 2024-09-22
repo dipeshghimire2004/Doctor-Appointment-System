@@ -3,8 +3,7 @@ import { nanoid } from "@reduxjs/toolkit";
 
 const initialState={
     
-    appointment:'',
-    id:'',
+    appointments:[],
 }
 
 const appointmentSlice=createSlice({
@@ -15,15 +14,21 @@ const appointmentSlice=createSlice({
             const newAppointment={
                
                 id:nanoid(),
-                appointment:action.payload.appointment,
+                // appointment:action.payload.appointment,
+                doctorName:action.payload.doctorName,
+                specialization:action.payload.specialization,
+                date:action.payload.date,
+                startTime:action.payload.startTime,
+                endTime:action.payload.endTime,
+
         };
-        state.appointment.push(newAppointment);
+        state.appointments.push(newAppointment);
         },
-        cancelAppointment:(state)=>{
-            state.appointment=state.appointment.filter((todo)=>todo.id!==id)           
+        cancelAppointment:(state,action)=>{
+            state.appointments=state.appointments.filter((appointment)=>appointment.id!==action.payload.id)           
         },
     }
 })
 
-export const {addAppointment, cancelAppointment}=appointmentSlice.actions
+export const {addAppointment, cancelAppointment}=appointmentSlice.actions;
 export default appointmentSlice.reducer

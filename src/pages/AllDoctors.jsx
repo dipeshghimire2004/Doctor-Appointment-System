@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import DoctorCard from '../components/DoctorCard';
-// import doctor1 from "../assets/images/doctor1.jpg"
-// import doctor2 from "../assets/images/doctor2.png"
-// import doctor3 from "../assets/images/doctor3.png"
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AllDoctors = () => {
 
   const [doctors, setDoctors]=useState([]);
   const [loading, setLoading]=useState(true);
   const [error,setError]=useState(null);
+  // const [selectedDoctor,setSelectedDoctor]=useState(null); //To store the selected doctor
+  const navigate=useNavigate();
 
   useEffect(()=>{
     const fetchDoctors = async () => {
@@ -43,7 +43,7 @@ const AllDoctors = () => {
               image={doctor.userId.profilePicture}
               name={doctor.userId.name}
               specialization={doctor.specialization}
-              
+              onBookNow={()=>navigate('/book-doctor-appointment', {state:{selectedDoctor : doctor }})}   //Navigate to DoctorAppointment with doctor data
             />
            
         ))}
@@ -53,6 +53,13 @@ const AllDoctors = () => {
 
 export default AllDoctors
 
+
+
+
+
+// import doctor1 from "../assets/images/doctor1.jpg"
+// import doctor2 from "../assets/images/doctor2.png"
+// import doctor3 from "../assets/images/doctor3.png"
 //experience={doctor.experience}
 
  // <img src={doctor.image} alt={doctor.name}/>
