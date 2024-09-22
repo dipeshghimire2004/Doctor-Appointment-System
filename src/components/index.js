@@ -24,7 +24,7 @@ export {
 
     HeroSection,
     ServicesSection,
-    Logout,
+    Logout
 
 
 }

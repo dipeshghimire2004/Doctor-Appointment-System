@@ -24,7 +24,7 @@ const Login = () => {
           },
         }
       );
-
+      console.log('Login response:', response);
       // If login is successful
       if (response.status === 200) {
         const { accessToken, refreshToken, user } = response.data;
