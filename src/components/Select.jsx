@@ -22,7 +22,7 @@ const TimeSlotPicker = forwardRef(({ label, onChange, value }, ref) => {
       <select
         ref={ref}  // Use the ref here if needed
         className="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-        onChange={e => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         value={value}
       >
         <option value="" disabled>Select time slot</option>

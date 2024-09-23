@@ -8,6 +8,9 @@ import { useSelector } from 'react-redux';
 const UserProfile = () => {
 
     const user=useSelector((state)=>state.user.userData);
+    const isLoggedIn=useSelector((state)=>state.user.status);
+    const state=useSelector((state)=>state);
+    console.log(state);
   const {
     register,
     handleSubmit,
@@ -38,9 +41,9 @@ const UserProfile = () => {
       {/* User Information */}
       <div className='w-full max-w-md bg-white p-6 rounded-lg shadow-md'>
         <div className='mb-6'>
-          <h2 className='text-xl font-bold'>{user.name || "DG"}</h2>
+          <h2 className='text-xl font-bold'>{user?.name || "DG"}</h2>
           <p className='text-gray-600'>Contact Information</p>
-          <p className='text-gray-600'>Email: {user.email}</p>
+          <p className='text-gray-600'>Email: {user?.email}</p>
           <p className='text-gray-600'>Phone: {user.phone}</p>
         </div>
 

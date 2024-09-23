@@ -6,7 +6,7 @@ import Button from './Button';
 import Input from './Input';
 import {useDispatch} from "react-redux"
 import { login } from '../features/authSlice';
-import { Toaster,toast } from 'react-hot-toast';
+import toast,{ Toaster} from 'react-hot-toast';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -33,14 +33,14 @@ const Register = () => {
             if (response.status === 200) {
                 dispatch(login(response.data))
                 
-                reset();  // Reset form after successful submission
+                reset(); 
                 navigate('/login', { replace: true });
                 toast.success('Registration successful! You can now log in.');
             } else {
-                alert(response.data.message || "Registration failed. Please try again.");
+                toast.error(response.data.message || "Registration failed. Please try again.");
             }
         } catch (error) {
-            alert(error.response?.data?.message || "An error occurred during registration. Please try again later.");
+            toast.error(error.response?.data?.message || "An error occurred during registration. Please try again later.");
         }
     };
 

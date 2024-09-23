@@ -2,7 +2,8 @@ import React from 'react'
 
 const Button = ({
     children,
-    type='submit',
+    type="button",
+    // onClick,
     bgColor="bg-orange-400 ",
     textColor="text-white",
     className="",

@@ -25,7 +25,7 @@ const Login = () => {
           },
         }
       );
-      console.log('Login response:', response);
+     
       // If login is successful
       if (response.status === 200) {
         const { accessToken, refreshToken, user } = response.data;
@@ -37,8 +37,8 @@ const Login = () => {
 
         // Dispatch login action with relevant user data
         dispatch(login({ userData: user }));
-        
-        localStorage.setItem('user',JSON.stringify(userData));
+
+        localStorage.setItem('user',JSON.stringify(user));
 
         // Navigate to the appropriate dashboard based on user role
         switch (user.role) {

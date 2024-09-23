@@ -54,8 +54,10 @@ const requestData={
       endTime,
     }));
 
-    toast.success('Form subitted successfully!')
+    
+    localStorage.setItem('requestData', JSON.stringify(requestData))
     navigate('/all-doctors'); 
+    toast.success('Form subitted successfully!')
   } catch (error) {
     toast.error('Error booking appointment. Please try again.');
     console.error('Error booking appointment:', error);
@@ -64,7 +66,7 @@ const requestData={
 
   return (
     <div className="p-6 max-w-lg mx-auto bg-white shadow-lg rounded-lg">
-      <Toaster/>
+     <Toaster/>
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Book an Appointment with {selectedDoctor?.name}</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
