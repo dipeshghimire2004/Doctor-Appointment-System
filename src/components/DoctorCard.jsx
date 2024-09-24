@@ -1,13 +1,8 @@
 import React from 'react';
 import Button from './Button';
-import { useNavigate } from 'react-router-dom';
 
 const DoctorCard = ({ image, name,specialization,onBookNow,...props}) => {
-  // const navigate=useNavigate();
-  // const handleNavigate=(e)=>{
-  //   e.preventDefault()
-  //   navigate("/doctor-detail")
-  // }
+
   return (
     <div className="flex flex-col items-center bg-white p-4 rounded-lg shadow-md overflow-hidden">
       <div className="bg-gray w-20 mb-4">
@@ -37,4 +32,10 @@ export default DoctorCard;
       {/* <p className="text-gray-600">{aboutDoctor}</p> */}
       {/* <p className="text-gray-600">{AppointmentFee}</p> */}
       {/* <button className="bg-orange-400 text-white py-2 px-6 rounded-full">Appointment</button> */}
-     
+       // const navigate=useNavigate();
+  // const handleNavigate=(e)=>{
+  //   e.preventDefault()
+  //   navigate("/doctor-detail")
+  // }
+  
+// import { useNavigate } from 'react-router-dom';

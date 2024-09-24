@@ -1,23 +1,17 @@
 import React from 'react';
 import Button from './Button'
-import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const ServiceCard = ({ icon, title, description}) => {
-  const navigate=useNavigate();
 
-  const handleNavigate=(e)=>{
-    navigate("/all-doctors");
-    console.log("Button Clicked")
-  }
   return (
     <div className="flex flex-col items-center bg-white p-6 rounded-lg shadow-md">
       <div className="text-5xl mb-4">{icon}</div>
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-gray-600">{description}</p>
-      {/* <button className="bg-orange-400 text-white py-2 px-6 rounded-full">Appointment</button> */}
-      <Button type="button" onClick={handleNavigate} >
-        Book Now</Button>
+      <Button type="button">
+        <Link to='/all-doctors'>Book Appointment</Link>
+        </Button>
     </div>
   );
 };

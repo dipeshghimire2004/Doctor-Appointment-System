@@ -32,12 +32,12 @@ const Header = () => {
         >
           All Doctors
         </NavLink>
-        <NavLink 
+        {/* <NavLink 
           to="/service" 
           className={({ isActive }) => `text-gray-600 hover:text-black ${isActive ? 'font-bold' : ''}`}
         >
           Service
-        </NavLink>
+        </NavLink> */}
         <NavLink 
           to="/about" 
           className={({ isActive }) => `text-gray-600 hover:text-black ${isActive ? 'font-bold' : ''}`}

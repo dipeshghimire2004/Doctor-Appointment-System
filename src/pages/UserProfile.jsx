@@ -6,9 +6,13 @@ import doctor1 from "../assets/images/doctor1.jpg";
 import { useSelector } from 'react-redux';
 
 const UserProfile = () => {
+  console.log("hello");
+  
+  console.log(userData);
+  
 
-    const user=useSelector((state)=>state.user.userData);
-    const isLoggedIn=useSelector((state)=>state.user.status);
+    const {user,status}=useSelector((state)=>state.auth);
+    const isLoggedIn=status;
     const state=useSelector((state)=>state);
     console.log(state);
   const {
@@ -22,7 +26,7 @@ const UserProfile = () => {
     // Handle form submission (e.g., send data to backend)
   };
 
-  if(!user) return <p>Please Log in to view user Profile</p>
+  if(!user) return <div>Please Log in to view user Profile</div>
   
   return (
     <div className='flex flex-col items-center bg-gray-50 py-8 px-4'>

@@ -16,12 +16,11 @@ const Footer = () => {
           {/* Quick Links Section */}
           <div className="mb-6">
             <h3 className="font-semibold mb-2">Quick Links</h3>
-            <nav className="space-y-2">
+            <nav className="space-y-2 space-x-4">
               <NavLink to="/" className="text-gray-400 hover:text-white">Home</NavLink>
-              <NavLink to="/service" className="text-gray-400 hover:text-white">Services</NavLink>
               <NavLink to="/about" className="text-gray-400 hover:text-white">About Us</NavLink>
               <NavLink to="/contact" className="text-gray-400 hover:text-white">Contact Us</NavLink>
-              <NavLink to="/appointment" className="text-gray-400 hover:text-white">Book Appointment</NavLink>
+              <NavLink to="/all-doctors" className="text-gray-400 hover:text-white">Book Appointment</NavLink>
             </nav>
           </div>
 

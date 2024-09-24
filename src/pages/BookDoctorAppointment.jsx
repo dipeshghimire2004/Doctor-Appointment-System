@@ -1,5 +1,4 @@
-import React from 'react';
-// import DoctorCard from '../components/DoctorCard';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {Select } from '../components';
 import axios from 'axios';
@@ -16,6 +15,25 @@ const BookDoctorAppointment = () => {
   const location=useLocation();
 
   const {selectedDoctor}=location.state || {};    //Get the doctor data passed from the previous page
+  const [bookedSlots, setBookedSlots]=useState([]);
+
+
+  const fetchBookedSlots=async(date)=>{
+    try{
+      const response=await axios.get(`http://localhost:8080/api/appointment/${selectedDoctor._id}/ booked-slots`,{
+        params:{date},
+      });
+      setBookedSlots(response.data);
+    }
+    catch(error){
+      console.error("Error fectching booked slots:", error);
+    }
+  };
+
+  const handleChange=(event)=>{
+    const selectedDate=event.target.value;
+    fetchBookedSlots(selectedDate);
+  };
 
   const onSubmit=async(data)=>{
   const { time, date}=data;
@@ -48,6 +66,7 @@ const requestData={
 
     dispatch(addAppointment({
       doctorName:selectedDoctor.userId.name,
+      profilePicture:selectedDoctor.profilePicture,
       specialization:selectedDoctor.specialization,
       date,
       startTime,
@@ -57,7 +76,7 @@ const requestData={
     
     localStorage.setItem('requestData', JSON.stringify(requestData))
     navigate('/all-doctors'); 
-    toast.success('Form subitted successfully!')
+    toast.success('Appointment booked successfully!')
   } catch (error) {
     toast.error('Error booking appointment. Please try again.');
     console.error('Error booking appointment:', error);
@@ -89,6 +108,7 @@ const requestData={
             className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           />
           {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time.message}</p>}
+          {startTime && startTime ? "bg-red" : "blue"}
         </div>
 
         <button 

@@ -41,14 +41,27 @@ const MyAppointments = () => {
         <ul className="space-y-4">
           {appointments.map((appointment) => (
             <li key={appointment.id} className="p-4 border border-gray-300 rounded-lg shadow-sm">
+              <div>
+              {appointment.profilePicture && (
+                <div className="mb-2">
+                  <img
+                    src={appointment.profilePicture}
+                    alt={`${appointment.doctorName}'s profile`}
+                    className="w-16 h-16 rounded-full"
+                  />
+                </div>
+              )}
+              </div>
+              <div>
               <div className="flex justify-between mb-2">
                 <span className="font-semibold text-gray-800">
                   {formatDate(appointment.date)}
                 </span>
-                <span className="text-gray-600">{appointment.time}</span>
+                <span className="text-gray-600">{appointment.startTime}</span>
               </div>
               <div className="text-gray-700">
                 {appointment.doctorName} - {appointment.specialization}
+              </div>
               </div>
             </li>
           ))}
