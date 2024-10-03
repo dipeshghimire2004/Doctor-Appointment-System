@@ -1,6 +1,22 @@
+import { useState } from 'react';
 import ServiceCard from './ServiceCard';
+import { useNavigate } from 'react-router-dom';
 
-const ServicesSection = () => {
+const ServicesSection = ({doctors}) => {
+
+  // const [speciality, setSpeciality]=useState('');
+  // const handleSpecialityClick=(specialization)=>{
+  //   setSpeciality(specialization);
+  // };
+
+  // const filteredDoctors=speciality?doctors.filter(doctor=>doctor.speciality===speciality) : doctors;
+  
+  const navigate=useNavigate();
+  const handleBookNow=(specialization)=>{
+    navigate('/all-doctors', {state:{specialization}});
+  }
+
+  
   const serviceCards = [
     {
       icon: "🧠",
@@ -32,6 +48,8 @@ const ServicesSection = () => {
           icon={service.icon} 
           title={service.title} 
           description={service.description} 
+          handleBookNow={handleBookNow}
+          specialization={service.specialization}
         />
       ))}
     </section>

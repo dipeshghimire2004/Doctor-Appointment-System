@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import Home from './pages/Home'
 import About from './pages/About'
@@ -21,22 +21,31 @@ import { useDispatch, useSelector } from 'react-redux'
 function App() {
   const dispatch=useDispatch();
 
-  const {status, userData}=useSelector((state)=>state.auth);
-
+  const status=useSelector((state)=>state.auth);
+  const userData=useSelector((state)=>state.auth.userData)
+  console.log(status);
+  console.log(userData);
   //Effect to check for token in localStorage and rehydrate authentication state
   useEffect(()=>{
     const token=localStorage.getItem('token');
-    const storedUser=localStorage.getItem('userData')
-    //if the use is logged in dispatch login action to rehudrate state
+    const storedUser=localStorage.getItem('userData');
+    console.log(storedUser)
+    //if the user is logged in dispatch login action to rehydrate state
     if(storedUser && token){
-      dispatch(login({token, user:JSON.parse(storedUser)}));
+      try {
+        const user=JSON.parse(storedUser)
+        dispatch(login({token, user}));
+      } catch (error) {
+        
+      }
+     
     }else{
       dispatch(logout());
     }
   },[dispatch])
 
   const ProtectedRoute=({element})=>{
-    return status ? element : <Navigate to='./login'/>;
+    return status ? element : <Navigate to='/login'/>;
   }
   
 
@@ -51,7 +60,8 @@ function App() {
           <Route path="/all-doctors" element={<AllDoctors/>}/>
           
           <Route path='/login' element={<Login/>}/>
-          <Route path='/Signup' element={<SignUp/>}/>
+          <Route path='/signup' element={<SignUp/>}/>     
+          {/* //path chnages from "Signup" to "signup" */}
           
           {/* <Route path='/appointment-form-section' element={<AppointmentForm/>}/> */}
            <Route path='/book-doctor-appointment' element={<BookDoctorAppointment/>}/>

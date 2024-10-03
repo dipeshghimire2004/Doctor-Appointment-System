@@ -9,9 +9,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const BookDoctorAppointment = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const [startTime, setStartTime]=useState(null);
+
   const now = new Date().toISOString().substring(0, 16);
   const navigate=useNavigate();
-  const dispatch=useDispatch();//should be outside of the onSubmit function to avoid re-creating
+  const dispatch=useDispatch();
   const location=useLocation();
 
   const {selectedDoctor}=location.state || {};    //Get the doctor data passed from the previous page
@@ -40,6 +42,7 @@ const BookDoctorAppointment = () => {
 
   // Assuming the user selects date as a day string and time as start time
   const startTime=time;
+  setStartTime(startTime)
   const endTime = new Date(new Date(`1970-01-01T${time}:00`).setMinutes(new Date(`1970-01-01T${time}:00`).getMinutes() + 30))
   .toTimeString()
   .substring(0, 5); // 30 mins after startTime
@@ -48,15 +51,14 @@ const BookDoctorAppointment = () => {
 const requestData={
   doctorId:selectedDoctor._id,      //pass selected doctor's ID
   day:new Date(date).toLocaleDateString('en-GB', {weekday:'long'}),
-  startTime,
-  endTime
+  timeslot:time,
 };
 
 
   try {
     // const response=await axios.post(`http://localhost:8080/api/appointment/:doctorId/:userId",{data},{
      
-    const response=await axios.post(`http://localhost:8080/api/appointment/${selectedDoctor._id}/availability`,
+    const response=await axios.post(`http://localhost:8080/api/appointment/${selectedDoctor._id}/`,
       requestData,{
       headers:{
         'content-Type':'application/json',

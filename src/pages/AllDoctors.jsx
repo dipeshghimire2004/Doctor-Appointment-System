@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react'
 import DoctorCard from '../components/DoctorCard';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const AllDoctors = () => {
 
   const [doctors, setDoctors]=useState([]);
   const [loading, setLoading]=useState(true);
   const [error,setError]=useState(null);
+  const location=useLocation();
+
   // const [selectedDoctor,setSelectedDoctor]=useState(null); //To store the selected doctor
   const navigate=useNavigate();
 
@@ -32,8 +35,12 @@ const AllDoctors = () => {
   if(loading) return <p>Loading doctors...</p>;
   if(error) return <p>Error:{error}</p>;
 
-    
+  //Get the specialization from the filter and doctors
       
+
+    const specialization=location.state?.specialization;
+    const filteredDoctors=specialization?doctors.filter((doctors)=>doctors.specialization===specialization): doctors;
+
   return (
     <section className="p-6 bg-gray-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {doctors.map((doctor)=>(
@@ -43,7 +50,7 @@ const AllDoctors = () => {
               image={doctor.userId.profilePicture}
               name={doctor.userId.name}
               specialization={doctor.specialization}
-              onBookNow={()=>navigate('/book-doctor-appointment', {state:{selectedDoctor : doctor }})}   //Navigate to DoctorAppointment with doctor data
+              onBookNow={()=>navigate('/book-doctor-appointment', {state:{selectedDoctor : doctors }})}   //Navigate to DoctorAppointment with doctor data
             />
            
         ))}

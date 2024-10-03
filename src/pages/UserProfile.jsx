@@ -1,109 +1,171 @@
-import React from 'react';
-import Select from '../components/Select';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
+import Input from '../components/Input';
 import { Button } from '../components';
-import doctor1 from "../assets/images/doctor1.jpg";
 import { useSelector } from 'react-redux';
 
 const UserProfile = () => {
-  console.log("hello");
-  
-  console.log(userData);
-  
+  // Load data from local storage
 
-    const {user,status}=useSelector((state)=>state.auth);
-    const isLoggedIn=status;
-    const state=useSelector((state)=>state);
-    console.log(state);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
-    // Handle form submission (e.g., send data to backend)
+  const userDetails=useSelector((state)=>state.auth.userData)
+  console.log(userDetails);
+  const profileInfo = {
+    name: localStorage.getItem('name') || '',
+    email: localStorage.getItem('email') || '',
+    phone: localStorage.getItem('phone') || '',
+    // address: localStorage.getItem('address') || '',
+    // gender: localStorage.getItem('gender') || '',
+    // dateOfBirth: localStorage.getItem('dateOfBirth') || '',
+    profileImage: localStorage.getItem('profilePicture') || '',
   };
 
-  if(!user) return <div>Please Log in to view user Profile</div>
-  
+  const [profileImagePreview, setProfileImagePreview] = useState(profileInfo.profileImage);
+  const [isEditing, setIsEditing] = useState(false); // Track if user is in edit mode
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    defaultValues: {
+      name: profileInfo.name,
+      email: profileInfo.email,
+      phone: profileInfo.phone,
+    },
+  });
+
+  // Function to handle profile update submission
+  const onSubmit = async (data) => {
+    try {
+      localStorage.setItem('profilePicture', profileImagePreview);
+      localStorage.setItem('name', data.name);
+      localStorage.setItem('phone', data.phone);
+
+      // Send updated data to the server
+      await axios.put('http://localhost:8080/api/edit-profile', {
+        name: data.name,
+        phone: data.phone,
+        profileImage: profileImagePreview,
+      });
+
+      toast.success('Profile updated successfully');
+      setIsEditing(false); // Exit edit mode after update
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile, please try again.');
+    }
+  };
+
+  // Handle image upload and preview
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Cancel editing, revert to original profile info
+  const handleCancel = () => {
+    reset(profileInfo); // Reset form to original profile data
+    setProfileImagePreview(profileInfo.profileImage); // Reset profile image
+    setIsEditing(false); // Exit edit mode
+  };
+
+  // Reset the form with local storage data when the page loads
+  useEffect(() => {
+    reset(profileInfo);
+  }, [reset]);
+
   return (
-    <div className='flex flex-col items-center bg-gray-50 py-8 px-4'>
+    <div className="flex flex-col items-center bg-gray-50 py-8 px-4">
+      <Toaster />
       {/* Header Section */}
-      <h1 className='text-3xl font-semibold mb-4'>User Profile</h1>
+      <h1 className="text-3xl font-semibold mb-4">User Profile</h1>
 
-      {/* Profile Image */}
-      <div className='mb-6'>
-        <img
-          src={doctor1}
-          alt='User'
-          className='w-32 h-32 rounded-full border-2 border-blue-600'
-        />
-      </div>
-
-      {/* User Information */}
-      <div className='w-full max-w-md bg-white p-6 rounded-lg shadow-md'>
-        <div className='mb-6'>
-          <h2 className='text-xl font-bold'>{user?.name || "DG"}</h2>
-          <p className='text-gray-600'>Contact Information</p>
-          <p className='text-gray-600'>Email: {user?.email}</p>
-          <p className='text-gray-600'>Phone: {user.phone}</p>
+      {/* User Information Section */}
+      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+        <div className="flex items-center justify-center mb-4">
+          <img
+            src={profileImagePreview || 'https://via.placeholder.com/150'}
+            alt="Profile"
+            className="h-32 w-32 rounded-full object-cover"
+          />
         </div>
 
-        {/* Form Section */}
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-          {/* Gender Selection */}
+        {!isEditing ? (
           <div>
-            <label
-              htmlFor='gender'
-              className='block mb-2 text-sm font-medium text-gray-700'
-            >
-              Gender
-            </label>
-            <select
-              id='gender'
-              {...register('gender', { required: 'Please select your gender' })}
-              className={`w-full p-2 border ${
-                errors.gender ? 'border-red-500' : 'border-gray-300'
-              } rounded-md bg-white`}
-            >
-              <option value=''>Select Gender</option>
-              <option value='female'>Female</option>
-              <option value='male'>Male</option>
-              <option value='others'>Others</option>
-            </select>
-            {errors.gender && (
-              <p className='text-red-500 text-sm mt-1'>{errors.gender.message}</p>
-            )}
-          </div>
+            {/* Profile View Mode */}
+            <div className="mb-4">
+              <p className="text-gray-700"><strong>Name:</strong> {profileInfo.name}</p>
+            </div>
+            <div className="mb-4">
+              <p className="text-gray-700"><strong>Email:</strong> {profileInfo.email}</p>
+            </div>
+            <div className="mb-4">
+              <p className="text-gray-700"><strong>Phone:</strong> {profileInfo.phone}</p>
+            </div>
 
-          {/* Date Selection */}
-          <div>
-            <label
-              htmlFor='date'
-              className='block mb-2 text-sm font-medium text-gray-700'
-            >
-              Date of Birth
-            </label>
-            <input
-              type='date'
-              id='date'
-              {...register('date', { required: 'Please select a date' })}
-              className={`w-full p-2 border ${
-                errors.date ? 'border-red-500' : 'border-gray-300'
-              } rounded-md`}
+            <Button onClick={() => setIsEditing(true)} className="w-full py-2 bg-blue-600 text-white rounded-md">
+              Edit Profile
+            </Button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* Edit Mode */}
+            <Input
+              label="Name:"
+              type="text"
+              {...register('name', { required: 'Name is required' })}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500"
             />
-            {errors.date && (
-              <p className='text-red-500 text-sm mt-1'>{errors.date.message}</p>
-            )}
-          </div>
+            {errors.name && <span className="text-red-600 text-sm">{errors.name.message}</span>}
 
-          {/* Submit Button */}
-          <Button type='submit' className='w-full py-2 bg-blue-600 text-white rounded-md'>
-            Edit
-          </Button>
-        </form>
+            <Input
+              label="Email (read-only):"
+              type="email"
+              value={profileInfo.email}
+              className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+              readOnly
+            />
+
+            <Input
+              label="Phone:"
+              type="tel"
+              {...register('phone', {
+                required: 'Phone number is required',
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: 'Phone number must contain only numbers',
+                },
+              })}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500"
+            />
+            {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
+
+            <div className="mb-4">
+              <label className="block text-gray-700">Profile Picture</label>
+              <input type="file" onChange={handleImageUpload} className="w-full" />
+              {profileImagePreview && (
+                <img src={profileImagePreview} alt="Profile Preview" className="mt-4 h-32 w-32 rounded-full" />
+              )}
+            </div>
+
+            {/* Action Buttons */} 
+            <div className="flex justify-between">
+              <Button type="submit" className="w-1/2 mr-2 py-2 bg-green-600 text-white rounded-md">
+                Update
+              </Button>
+              <Button
+                type="button"
+                onClick={handleCancel}
+                className="w-1/2 py-2 bg-red-500 text-white rounded-md"
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );
