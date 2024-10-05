@@ -23,18 +23,18 @@ function App() {
 
   const status=useSelector((state)=>state.auth);
   const userData=useSelector((state)=>state.auth.userData)
-  console.log(status);
-  console.log(userData);
+ 
   //Effect to check for token in localStorage and rehydrate authentication state
+
   useEffect(()=>{
     const token=localStorage.getItem('token');
     const storedUser=localStorage.getItem('userData');
-    console.log(storedUser)
+    // console.log(storedUser)
     //if the user is logged in dispatch login action to rehydrate state
     if(storedUser && token){
       try {
-        const user=JSON.parse(storedUser)
-        dispatch(login({token, user}));
+        const userData=JSON.parse(storedUser)
+        dispatch(login({token, userData}));
       } catch (error) {
         
       }

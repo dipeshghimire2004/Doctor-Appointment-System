@@ -11,7 +11,6 @@ const AllDoctors = () => {
   const [error,setError]=useState(null);
   const location=useLocation();
 
-  // const [selectedDoctor,setSelectedDoctor]=useState(null); //To store the selected doctor
   const navigate=useNavigate();
 
   useEffect(()=>{

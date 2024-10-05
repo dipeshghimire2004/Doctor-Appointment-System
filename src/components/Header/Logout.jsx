@@ -4,6 +4,7 @@ import { logout } from '../../features/authSlice';
 import { useDispatch } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Logout = () => {
   const dispatch = useDispatch();

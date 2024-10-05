@@ -1,22 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Ensure valid fallback if no data exists in localStorage
+// Retrieve user data and handle possible invalid entries
 const userDataFromStorage = localStorage.getItem('userData');
 let parsedUserData = null;
-console.log(userDataFromStorage)
+
 try {
-    if (userDataFromStorage && userDataFromStorage !== "undefined") {  // Check for undefined string
-        parsedUserData = JSON.parse(userDataFromStorage);  // Only parse if valid string
-        
+    if (userDataFromStorage && userDataFromStorage !== "undefined") {
+        parsedUserData = JSON.parse(userDataFromStorage); // Parse only valid data
     }
 } catch (error) {
     console.error("Error parsing userData from localStorage:", error);
-    localStorage.removeItem('userData');  // Ensure invalid data is cleared
+    localStorage.removeItem('userData');  // Clear invalid data from localStorage
 }
 
+// Initial state setup
 const initialState = {
-    status: localStorage.getItem('authStatus') === 'true' || false,  // Default to false if not logged in
-    userData: parsedUserData || null,  // Fallback to null if parsing fails
+    status: localStorage.getItem('authStatus') === 'true',  // Ensure proper boolean for login status
+    userData: parsedUserData || null,  // Fallback to null if parsed data is invalid or missing
+    token: localStorage.getItem('token') || null,  // Retrieve token from localStorage or fallback to null
 };
 
 const authSlice = createSlice({
@@ -24,33 +25,40 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
+            // Set state when logging in
             state.status = true;
             state.userData = action.payload.userData;
+            state.token = action.payload.token;  // Store token in the state
 
-            // Save to localStorage
-            localStorage.setItem('authStatus', 'true');  // Store as string
-            localStorage.setItem('userData', JSON.stringify(action.payload.userData));  // Save user data properly
-            localStorage.setItem('token', action.payload.token);  // Store token
+            // Store user session info in localStorage
+            localStorage.setItem('authStatus', 'true');  // Save login status as a string
+            localStorage.setItem('userData', JSON.stringify(action.payload.userData));  // Save user data
+            localStorage.setItem('token', action.payload.token);  // Save token in localStorage
         },
         logout: (state) => {
+            // Clear state when logging out
             state.status = false;
             state.userData = null;
+            state.token = null;  // Clear token in state as well
 
-            // Remove from localStorage
+            // Remove session data from localStorage
             localStorage.removeItem('authStatus');
             localStorage.removeItem('userData');
-            localStorage.removeItem('token');
+            localStorage.removeItem('token');  // Ensure token is removed on logout
         },
-        updateUserData:(state, action)=>{
-            state.userData={
-                ...state.userData,
-                ...action.payload,
-            }
-            localStorage.setItem('userData', JSON.stringify(state.userData));
-        }
+        updateUserData: (state, action) => {
+            // Update user data in the state by merging new data with existing data
+            state.userData = {
+                ...state.userData,  // Retain existing properties
+                ...action.payload,  // Merge updated fields
+            };
 
+            // Update userData in localStorage to keep it in sync with state
+            localStorage.setItem('userData', JSON.stringify(state.userData));
+        },
     }
 });
 
-export const { login, logout,updateUserData } = authSlice.actions;
+// Export actions for use in components
+export const { login, logout, updateUserData } = authSlice.actions;
 export default authSlice.reducer;

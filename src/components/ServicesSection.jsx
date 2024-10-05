@@ -4,13 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 const ServicesSection = ({doctors}) => {
 
-  // const [speciality, setSpeciality]=useState('');
-  // const handleSpecialityClick=(specialization)=>{
-  //   setSpeciality(specialization);
-  // };
-
-  // const filteredDoctors=speciality?doctors.filter(doctor=>doctor.speciality===speciality) : doctors;
-  
   const navigate=useNavigate();
   const handleBookNow=(specialization)=>{
     navigate('/all-doctors', {state:{specialization}});

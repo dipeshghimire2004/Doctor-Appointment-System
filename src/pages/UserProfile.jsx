@@ -4,78 +4,91 @@ import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import Input from '../components/Input';
 import { Button } from '../components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateUserData } from '../features/authSlice';
 
 const UserProfile = () => {
-  // Load data from local storage
+  const dispatch = useDispatch();
+  
+  // Fetching userData from the Redux store
+  const userData = useSelector((state) => state.auth.userData); 
 
-  const userDetails=useSelector((state)=>state.auth.userData)
-  console.log(userDetails);
-  const profileInfo = {
-    name: localStorage.getItem('name') || '',
-    email: localStorage.getItem('email') || '',
-    phone: localStorage.getItem('phone') || '',
-    // address: localStorage.getItem('address') || '',
-    // gender: localStorage.getItem('gender') || '',
-    // dateOfBirth: localStorage.getItem('dateOfBirth') || '',
-    profileImage: localStorage.getItem('profilePicture') || '',
-  };
+  // Define states for profile image preview and edit mode
+  const [profileImagePreview, setProfileImagePreview] = useState(userData?.profilePicture || '');
+  const [isEditing, setIsEditing] = useState(false);
 
-  const [profileImagePreview, setProfileImagePreview] = useState(profileInfo.profileImage);
-  const [isEditing, setIsEditing] = useState(false); // Track if user is in edit mode
+  // Initialize form with react-hook-form and default values
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues: {
-      name: profileInfo.name,
-      email: profileInfo.email,
-      phone: profileInfo.phone,
+      name: userData?.name || '',
+      email: userData?.email || '',
+      phone: userData?.phone || '',
     },
   });
 
   // Function to handle profile update submission
   const onSubmit = async (data) => {
     try {
-      localStorage.setItem('profilePicture', profileImagePreview);
-      localStorage.setItem('name', data.name);
-      localStorage.setItem('phone', data.phone);
-
-      // Send updated data to the server
-      await axios.put('http://localhost:8080/api/edit-profile', {
+      const updatedProfile = {
+        ...userData,
         name: data.name,
         phone: data.phone,
-        profileImage: profileImagePreview,
+        profilePicture: profileImagePreview,
+      };
+      console.log('Sending request to backend:', updatedProfile);
+      const token=localStorage.getItem('token');
+      // Send updated data to the server
+      await axios.put('http://localhost:8080/api/user/edit-profile', {
+        name: data.name,
+        phone: data.phone,
+        profilePicture:profileImagePreview,
+      },{
+          headers: {
+            Authorization: `Bearer ${token}`,  // Add token in Authorization header
+          },
       });
 
+      // Update Redux state and local storage
+      dispatch(updateUserData(updatedProfile));
       toast.success('Profile updated successfully');
       setIsEditing(false); // Exit edit mode after update
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error('Error updating profile:', error.message);
       toast.error('Failed to update profile, please try again.');
     }
   };
 
-  // Handle image upload and preview
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+    //Handle image upload and preview
+    const handleImageUpload=(event)=>{
+      const file=event.target.files[0];
+      if(file){
+        const reader= new FileReader();
+        reader.onloadend=()=>{
+          setProfileImagePreview(reader.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
 
-  // Cancel editing, revert to original profile info
+
+  // Cancel editing and revert to original profile info
   const handleCancel = () => {
-    reset(profileInfo); // Reset form to original profile data
-    setProfileImagePreview(profileInfo.profileImage); // Reset profile image
+    reset(userData); // Reset form to original profile data
+    setProfileImagePreview(userData?.profilePicture || ''); // Reset profile image
     setIsEditing(false); // Exit edit mode
   };
 
-  // Reset the form with local storage data when the page loads
+  // Reset the form with userData when the page loads
   useEffect(() => {
-    reset(profileInfo);
+    if (userData) {
+      reset(userData);
+    }
   }, [reset]);
+
+  // Render a loading state if userData is not available
+  if (!userData) {
+    return <p>Loading...</p>; // You can customize the loading message here
+  }
 
   return (
     <div className="flex flex-col items-center bg-gray-50 py-8 px-4">
@@ -97,13 +110,13 @@ const UserProfile = () => {
           <div>
             {/* Profile View Mode */}
             <div className="mb-4">
-              <p className="text-gray-700"><strong>Name:</strong> {profileInfo.name}</p>
+              <p className="text-gray-700"><strong>Name:</strong> {userData.name}</p>
             </div>
             <div className="mb-4">
-              <p className="text-gray-700"><strong>Email:</strong> {profileInfo.email}</p>
+              <p className="text-gray-700"><strong>Email:</strong> {userData.email}</p>
             </div>
             <div className="mb-4">
-              <p className="text-gray-700"><strong>Phone:</strong> {profileInfo.phone}</p>
+              <p className="text-gray-700"><strong>Phone:</strong> {userData.phone}</p>
             </div>
 
             <Button onClick={() => setIsEditing(true)} className="w-full py-2 bg-blue-600 text-white rounded-md">
@@ -124,7 +137,7 @@ const UserProfile = () => {
             <Input
               label="Email (read-only):"
               type="email"
-              value={profileInfo.email}
+              value={userData.email}
               className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
               readOnly
             />
@@ -151,9 +164,10 @@ const UserProfile = () => {
               )}
             </div>
 
-            {/* Action Buttons */} 
+            {/* Action Buttons */}
             <div className="flex justify-between">
-              <Button type="submit" className="w-1/2 mr-2 py-2 bg-green-600 text-white rounded-md">
+              <Button type="submit" 
+              className="w-1/2 mr-2 py-2 bg-green-600 text-white rounded-md">
                 Update
               </Button>
               <Button
