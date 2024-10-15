@@ -49,7 +49,7 @@ const AllDoctors = () => {
               image={doctor.userId.profilePicture}
               name={doctor.userId.name}
               specialization={doctor.specialization}
-              onBookNow={()=>navigate('/book-doctor-appointment', {state:{selectedDoctor : doctors }})}   //Navigate to DoctorAppointment with doctor data
+              onBookNow={()=>navigate('/book-doctor-appointment', {state:{selectedDoctor : doctor }})}   //Navigate to DoctorAppointment with doctor data
             />
            
         ))}

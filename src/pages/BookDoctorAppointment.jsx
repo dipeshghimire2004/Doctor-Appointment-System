@@ -6,53 +6,60 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { addAppointment } from '../features/appointmentSlice';
 
-const BookDoctorAppointment = () => {
-  const { register, handleSubmit, formState: { errors },setValue } = useForm();
+
+const BookDoctorAppointment = ({ doctorId }) => {
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+  const [availableSlots, setAvailableSlots] = useState([]);
   const [bookedSlots, setBookedSlots] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [day, setDay] = useState('Monday'); // Default to Monday
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const { selectedDoctor } = location.state || {};  // Ensure this is coming from the previous page (All doctors page)
+  const { selectedDoctor } = location.state || {};  // Ensure this comes from the previous page (All doctors page)
+
+  console.log(selectedDoctor);
 
   const token = localStorage.getItem('token');  // Assuming JWT token is stored in localStorage
 
-  // Fetch booked slots for the selected doctor on the selected date
-  const fetchBookedSlots = async (date) => {
-    if (!selectedDoctor?._id) return;
+  useEffect(() => {
+    // Fetch booked slots for the selected doctor on the selected day
+    const fetchBookedSlots = async () => {
+      if (!selectedDoctor?._id) return;
 
-    try {
-      const response = await axios.get(`http://localhost:8080/api/appointment/${selectedDoctor._id}/booked-slots`, {
-        params: { date },
-        headers: {
-          Authorization: `Bearer ${token}`,  // Add JWT token in headers
-        }
-      });
-      setBookedSlots(response.data);
-    } catch (error) {
-      console.error("Error fetching booked slots:", error);
-      toast.error("Error fetching booked slots.");
-    }
-  };
+      try {
+        const response = await axios.get(`http://localhost:8080/api/doctor/view-availability/${doctorId}`, {
+          params: { day },
+          headers: {
+            Authorization: `Bearer ${token}`,  // Add JWT token in headers
+          }
+        });
+        console.log(response.data);
+        setBookedSlots(response.data.bookedSlots || []);
+        setAvailableSlots(response.data.availableSlots || []);
+      } catch (error) {
+        console.error("Error fetching booked slots:", error);
+        toast.error("Error fetching booked slots.");
+      }
+    };
 
-  // Handle date change
-  const handleDateChange = (event) => {
-    const date = event.target.value;
-    setSelectedDate(date);
-    fetchBookedSlots(date);  // Fetch slots when a date is selected
-  };
+    fetchBookedSlots();
+  }, [doctorId, day, selectedDoctor, token]);
 
   // Submit the appointment form
   const onSubmit = async (data) => {
-    const { time, date } = data;
+    if(!selectedDoctor?._id){
+      toast.error("Doctor not selected or doctor is missing");
+      return;
+    }
+
+    const { time } = data;
     const requestData = {
       doctorId: selectedDoctor._id,
-      day: new Date(date).toLocaleDateString('en-GB', { weekday: 'long' }),
+      day,
       timeslot: time,
     };
 
     try {
-      // http://localhost:8080/api/appointment/:/doctorId/${selectedDoctor._id}`, requestData,
       const response = await axios.post(`http://localhost:8080/api/appointment/${doctorId}`, requestData, {
         headers: {
           Authorization: `Bearer ${token}`,  // Pass JWT token
@@ -65,7 +72,7 @@ const BookDoctorAppointment = () => {
         doctorName: selectedDoctor.userId.name,
         profilePicture: selectedDoctor.profilePicture,
         specialization: selectedDoctor.specialization,
-        date,
+        day,
         startTime: time,
         endTime: new Date(new Date(`1970-01-01T${time}:00`).setMinutes(new Date(`1970-01-01T${time}:00`).getMinutes() + 30))
           .toTimeString().substring(0, 5),  // Calculate end time (30 minutes after start time)
@@ -87,16 +94,21 @@ const BookDoctorAppointment = () => {
       </h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Date Input */}
-        <div>
-          <input
-            label="Date"
-            type="date"
-            {...register('date', { required: 'Date is required' })}
-            onChange={handleDateChange}
-            className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-          />
-          {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date.message}</p>}
+        {/* Day (Weekday) Selection */}
+        <div className="mb-4">
+          <label className="block mb-2 text-sm font-medium text-gray-700">Select Day:</label>
+          <div className="grid grid-cols-5 gap-2">
+            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((weekday) => (
+              <button
+                type="button"
+                key={weekday}
+                onClick={() => setDay(weekday)}  // Set the selected day
+                className={`py-2 px-4 rounded-lg ${day === weekday ? 'bg-indigo-500' : 'bg-gray-300 hover:bg-gray-400'} text-white`}
+              >
+                {weekday}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Time Slot Selection */}

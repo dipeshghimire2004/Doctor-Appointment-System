@@ -9,9 +9,9 @@ import { Link } from 'react-router-dom';
 const Logout = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem('token');
-  const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decodes JWT payload
-  console.log(localStorage.getItem('authStatus'))
-  console.log(decodedToken.exp); // Token expiration time
+  // const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decodes JWT payload
+  // console.log(localStorage.getItem('authStatus'))
+  // console.log(decodedToken.exp); // Token expiration time
   const handleLogout = async () => {
     try {
       // Make API call to backend logout route

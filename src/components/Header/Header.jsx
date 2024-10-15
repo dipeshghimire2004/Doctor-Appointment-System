@@ -47,12 +47,14 @@ const Header = () => {
         >
           All Doctors
         </Link>
+        
         <Link 
           to="/about" 
           className="text-gray-600 hover:text-black"
         >
           About
         </Link>
+
         <Link 
           to="/contact" 
           className="text-gray-600 hover:text-black"
@@ -61,7 +63,7 @@ const Header = () => {
         </Link>
       </nav>
 
-      {token ? ( // Show logged-in options if token exists
+      {token ? ( 
         <div className="relative group mr-16">
           <img 
             className="w-10 h-10 rounded-full" 
@@ -70,28 +72,28 @@ const Header = () => {
           />
           <div className="absolute text-sm hidden group-hover:block bg-white border rounded shadow-lg right-0">
             <div
-              onClick={() => navigate('/user-profile')} // Navigate to user profile
+              onClick={() => navigate('/user-profile')} 
               className="p-2 hover:bg-gray-200 cursor-pointer"
             >
               My Profile
             </div>
             <div
-              onClick={() => navigate('/my-appointments')} // Navigate to appointments
+              onClick={() => navigate('/my-appointments')} 
               className="p-2 hover:bg-gray-200 cursor-pointer"
             >
               My Appointments
             </div>
             <div className="p-2">
-              <Logout /> {/* Logout component */}
+              <Logout /> 
             </div>
           </div>
         </div>
-      ) : ( // Show login and signup buttons if token doesn't exist
+      ) : (
         <div className="space-x-4">
-          <Button onClick={() => navigate('/login')}> {/* Navigate to login */}
+          <Button onClick={() => navigate('/login')}>
             Login
           </Button>
-          <Button onClick={() => navigate('/signup')}> {/* Navigate to signup */}
+          <Button onClick={() => navigate('/signup')}> 
             Sign Up
           </Button>
         </div>

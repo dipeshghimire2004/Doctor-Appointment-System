@@ -50,7 +50,7 @@ function App() {
   
 
   return (
-    <Router>
+    <div>
       <Header /> {/* Ensure Header is included only once */}
       <main className="p-6">
         <Routes>
@@ -72,7 +72,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
-    </Router>
+    </div>
    
   )
 }
