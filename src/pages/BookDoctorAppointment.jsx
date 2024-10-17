@@ -17,7 +17,7 @@ const BookDoctorAppointment = ({ doctorId }) => {
   const location = useLocation();
   const { selectedDoctor } = location.state || {};  // Ensure this comes from the previous page (All doctors page)
 
-  console.log(selectedDoctor);
+  console.log(selectedDoctor.userId.name);
 
   const token = localStorage.getItem('token');  // Assuming JWT token is stored in localStorage
 
@@ -68,7 +68,9 @@ const BookDoctorAppointment = ({ doctorId }) => {
       });
 
       // Dispatch the new appointment to Redux store
+      console.log(selectedDoctor.userId.name);
       dispatch(addAppointment({
+        
         doctorName: selectedDoctor.userId.name,
         profilePicture: selectedDoctor.profilePicture,
         specialization: selectedDoctor.specialization,

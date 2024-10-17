@@ -61,7 +61,6 @@ const Register = () => {
               label="Name"
               id="name"
               {...register('name', { required: 'Name is required' })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500"
               placeholder="Enter your name"
             />
             {errors.name && <span className="text-red-600 text-sm">{errors.name.message}</span>}
@@ -80,7 +79,6 @@ const Register = () => {
                   message: "Please enter a valid email address"
                 }
               })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500"
             />
             {errors.email && <span className="text-red-600 text-sm">{errors.email.message}</span>}
           </div>
@@ -97,7 +95,6 @@ const Register = () => {
                   message: 'Phone number must contain only numbers',
                 },
               })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500"
             />
             {errors.phone && <span className="text-red-600 text-sm">{errors.phone.message}</span>}
           </div>
@@ -114,7 +111,6 @@ const Register = () => {
                   message: 'Password must be at least 8 characters long',
                 },
               })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500"
               placeholder="Enter your password"
             />
             <div
@@ -135,7 +131,6 @@ const Register = () => {
                 required: 'Please confirm your password',
                 validate: value => value === password || 'Passwords do not match',
               })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500"
               placeholder="Confirm your password"
             />
             <div
@@ -150,7 +145,7 @@ const Register = () => {
           <div className="flex justify-center">
             <Button
               type="submit"
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300"
+              className="w-full font-bold py-3 px-4 rounded-lg transition duration-300"
             >
               Create Account
             </Button>

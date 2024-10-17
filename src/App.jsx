@@ -10,12 +10,13 @@ import AllDoctors from './pages/AllDoctors'
 import BookDoctorAppointment from './pages/BookDoctorAppointment'
 import UserProfile from './pages/UserProfile'
 import Login from './components/Login'
-import SignUp from './components/SignUp'
+import Signup from './components/SignUp'
 import MyAppointments from './components/MyAppointments'
 
 import { Navigate } from 'react-router-dom'
 import{login, logout} from './features/authSlice';
 import { useDispatch, useSelector } from 'react-redux'
+import Register from './components/SignUp'
 
 
 function App() {
@@ -50,7 +51,7 @@ function App() {
   
 
   return (
-    <div>
+    <Router>
       <Header /> {/* Ensure Header is included only once */}
       <main className="p-6">
         <Routes>
@@ -60,7 +61,7 @@ function App() {
           <Route path="/all-doctors" element={<AllDoctors/>}/>
           
           <Route path='/login' element={<Login/>}/>
-          <Route path='/signup' element={<SignUp/>}/>     
+          <Route path='/signup' element={<Register/>}/>     
           {/* //path chnages from "Signup" to "signup" */}
           
           {/* <Route path='/appointment-form-section' element={<AppointmentForm/>}/> */}
@@ -72,7 +73,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
-    </div>
+    </Router>
    
   )
 }
